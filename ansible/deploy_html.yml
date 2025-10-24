@@ -1,0 +1,22 @@
+---
+- name: Deploy HTML files to AWS and Azure and restart Nginx
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Copy index-aws.html to AWS
+      copy:
+        src: ../index-aws.html
+        dest: /var/www/html/index-aws.html
+      when: inventory_hostname == "aws-app"
+
+    - name: Copy index-azure.html to Azure
+      copy:
+        src: ../index-azure.html
+        dest: /var/www/html/index-azure.html
+      when: inventory_hostname == "azure-vm"
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
